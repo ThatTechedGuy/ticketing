@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import { User } from "../models/user";
-import { DatabaseConnectionError } from "../errors/database-connection-error";
 import { RequestValidationError } from "../errors/request-validation-error";
 import { BadRequestError } from "../errors/bad-request-error";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -17,25 +17,38 @@ router.post(
       .withMessage("password must be between 4 and 20 characters."),
   ],
   async (req: Request, res: Response) => {
+    /* Throw validation errors, if any. */
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       throw new RequestValidationError(errors.array());
     }
 
     const { email, password } = req.body;
 
+    /* Throw an error if an associated user already exists. */
     const existingUser = await User.findOne({ email });
-
     if (!!existingUser) {
       throw new BadRequestError("User already exists.");
-    } else {
-      const user = User.build({ email, password });
-
-      await user.save();
-
-      res.status(201).send(user);
     }
+
+    /* Add the user to the database. */
+    const user = User.build({ email, password });
+    await user.save();
+
+    /* Generate auth token */
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      "asdf"
+    );
+    /* Store it in the session object */
+    req.session = {
+      jwt: userJwt,
+    };
+
+    res.status(201).send(user);
   }
 );
 

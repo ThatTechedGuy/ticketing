@@ -6,6 +6,7 @@ import express from "express";
 import "express-async-errors";
 
 import { json } from "body-parser";
+import cookieSession from "cookie-session";
 
 import mongoose from "mongoose";
 
@@ -18,8 +19,24 @@ import { errorHandler } from "./middlewares/error-handler";
 import { NotFoundError } from "./errors/not-found-error";
 
 const app = express();
-
+/**
+ * Since the traffic is being proxied through ingress-nginx,
+ * make express trust the reverse proxy.
+ */
+app.set("trust proxy", true);
 app.use(json());
+
+/**
+ * For the purposes of storing the JWT token,
+ */
+app.use(
+  cookieSession({
+    // Disabling encryption because the JWT is already encrypted
+    signed: false,
+    // Over HTTPS protocol only
+    secure: true,
+  })
+);
 
 /**
  * Route middlewares - Authentication
@@ -51,13 +68,14 @@ const init = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
+    console.log("Connected to MongoDb");
+
+    app.listen(3000, () =>
+      console.log("Auth service has started running. Listening on port 3000!")
+    );
   } catch (err) {
     console.error("Failed to connect to auth-mongo sevice:", err);
   }
-
-  app.listen(3000, () =>
-    console.log("Auth service has started running. Listening on port 3000!")
-  );
 };
 
 init();
