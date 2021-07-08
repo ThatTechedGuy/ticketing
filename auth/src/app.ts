@@ -31,7 +31,7 @@ app.use(
     // Disabling encryption because the JWT is already encrypted
     signed: false,
     // Over HTTPS protocol only
-    secure: true,
+    secure: process.env.NODE_ENV !== "test",
   })
 );
 

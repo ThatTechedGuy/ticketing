@@ -1,10 +1,13 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import { app } from "../app";
+import request from "supertest";
+
 
 let mongo: any;
 beforeAll(async () => {
   process.env.JWT_KEY = "asdf";
+  process.env.NODE_ENV = "test";
   // This will create an new instance of "MongoMemoryServer" and automatically start it
   mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
