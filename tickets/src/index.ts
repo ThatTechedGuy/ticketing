@@ -6,6 +6,7 @@ const init = async () => {
   if (!process.env.JWT_KEY) {
     throw Error("JWT_KEY not defined");
   }
+
   if (!process.env.MONGO_URI) {
     throw Error("MONGO_URI not defined");
   }
@@ -20,10 +21,12 @@ const init = async () => {
     console.log("Connected to MongoDb");
 
     app.listen(3000, () =>
-      console.log("Auth service has started running. Listening on port 3000!")
+      console.log(
+        "Tickets service has started running. Listening on port 3000!"
+      )
     );
   } catch (err) {
-    console.error("Failed to connect to auth-mongo sevice:", err);
+    console.error("Failed to connect to tickets-mongo sevice:", err);
   }
 };
 

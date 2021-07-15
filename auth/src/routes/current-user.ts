@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { currentUser, requireAuth } from "../middlewares/current-user";
+import { currentUser } from "@ttgticketing/common";
 
 const router = express.Router();
 

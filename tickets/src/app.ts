@@ -7,13 +7,12 @@ import "express-async-errors";
 import { json } from "body-parser";
 import cookieSession from "cookie-session";
 
-import { currentUserRouter } from "./routes/current-user";
-import { signinRouter } from "./routes/signin";
-import { signoutRouter } from "./routes/signout";
-import { signupRouter } from "./routes/signup";
-import { errorHandler } from "@ttgticketing/common";
+import { currentUser, errorHandler, NotFoundError } from "@ttgticketing/common";
 
-import { NotFoundError } from "@ttgticketing/common";
+import { createTicketRouter } from "./routes/new";
+import { showTicketRouter } from "./routes/show";
+import { updateTicketRouter } from "./routes/update";
+import { showAllTicketsRouter } from "./routes";
 
 const app = express();
 /**
@@ -36,12 +35,13 @@ app.use(
 );
 
 /**
- * Route middlewares - Authentication
+ * Route middlewares - Tickets
  */
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
+app.use(currentUser);
+app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(showAllTicketsRouter);
+app.use(updateTicketRouter);
 
 /**
  * 404 - Throw an error if the user encounters an unknown route.

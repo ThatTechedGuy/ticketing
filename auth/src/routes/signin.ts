@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { validateRequest } from "../middlewares/validate";
+import { validateRequest } from "@ttgticketing/common";
 import { User } from "../models/user";
-import { BadRequestError } from "../errors/bad-request-error";
+import { BadRequestError } from "@ttgticketing/common";
 import { Password } from "../services/password";
 import jwt from "jsonwebtoken";
 
