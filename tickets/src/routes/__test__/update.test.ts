@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "./../../app";
 import { generateId, signin } from "../../test/util";
+import { natsWrapper } from "../../nats-wrapper";
+import { Subjects } from "@ttgticketing/common";
 
 it("returns a 404 if the provided id does not exist", async () => {
   const ticketId = generateId();
@@ -131,4 +133,42 @@ it("updates the ticket when provided valid inputs", async () => {
 
   expect(ticket.price).toEqual(300);
   expect(ticket.title).toEqual("new title");
+});
+
+it("publishes an event", async () => {
+  const cookie = signin();
+
+  // Create ticket
+  const res = await request(app)
+    .post(`/api/tickets`)
+    .set("Cookie", cookie)
+    .send({
+      title: "title",
+      price: 200,
+    })
+    .expect(201);
+
+  const ticketId = res.body.id;
+
+  expect(natsWrapper.client.publish).toHaveBeenLastCalledWith(
+    Subjects.TicketCreated,
+    expect.anything(),
+    expect.anything()
+  );
+
+  // Update ticket
+  await request(app)
+    .put(`/api/tickets/${ticketId}`)
+    .set("Cookie", cookie)
+    .send({
+      title: "new title",
+      price: 300,
+    })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenLastCalledWith(
+    Subjects.TicketUpdated,
+    expect.anything(),
+    expect.anything()
+  );
 });
