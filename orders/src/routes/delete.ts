@@ -4,6 +4,8 @@ import {
   NotAuthorizedError,
 } from "@ttgticketing/common";
 import express, { Request, Response } from "express";
+import { OrderCancelledPublisher } from "../events/order-cancelled-publisher";
+import { natsWrapper } from "../nats-wrapper";
 import { Order, OrderStatus } from "../models/order";
 
 const router = express.Router();
@@ -15,7 +17,7 @@ router.delete(
     const { orderId } = req.params;
 
     // Find the order
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate("ticket");
     if (!order) {
       throw new NotFoundError();
     }
@@ -30,6 +32,14 @@ router.delete(
     });
 
     await order.save();
+
+    // Publish order cancellation event
+    await new OrderCancelledPublisher(natsWrapper.client).publish({
+      id: order.id,
+      ticket: {
+        id: order.ticket.id,
+      },
+    });
 
     res.status(204).send(order);
   }
