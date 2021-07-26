@@ -2,6 +2,7 @@ import { model, Schema, Document, Model } from "mongoose";
 import { Order, OrderStatus } from "./order";
 
 interface TicketAttrs {
+  id?: string;
   price: number;
   title: string;
 }
@@ -38,7 +39,17 @@ const ticketSchema = new Schema<TicketDoc, TicketModel>(
   }
 );
 
-ticketSchema.statics.build = (attrs: TicketAttrs) => new Ticket(attrs);
+ticketSchema.statics.build = (attrs: TicketAttrs) => {
+  if (attrs.id) {
+    const { id, ...otherFields } = attrs;
+    return new Ticket({
+      _id: attrs.id,
+      ...otherFields,
+    });
+  }
+
+  return new Ticket(attrs);
+};
 
 /** Check if this ticket is not already reserved.
  *  Run a query to look at all the orders and find an order

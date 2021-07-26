@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { app } from "./app";
+import { TicketCreatedListener } from "./events/listeners/ticket-created-listener";
+import { TicketUpdatedListener } from "./events/listeners/ticket-updated-listener";
 import { natsWrapper } from "./nats-wrapper";
 
 const init = async () => {
@@ -40,6 +42,9 @@ const init = async () => {
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
 
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
+
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -48,9 +53,7 @@ const init = async () => {
     console.log("Connected to MongoDb");
 
     app.listen(3000, () =>
-      console.log(
-        "Orders service has started running. Listening on port 3000!"
-      )
+      console.log("Orders service has started running. Listening on port 3000!")
     );
   } catch (err) {
     console.error("Failed to connect to orders-mongo sevice:", err);

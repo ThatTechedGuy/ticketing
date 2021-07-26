@@ -38,7 +38,6 @@ const ticketSchema = new Schema<TicketDoc, TicketModel>(
         delete ret._id;
       },
     },
-    versionKey: false,
   }
 );
 
