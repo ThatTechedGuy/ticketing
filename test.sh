@@ -19,3 +19,9 @@ npx npm-check --update-all
 npm i
 npx jest
 cd ..
+
+echo "Upgrading orders microservice.."
+cd ticketing-common 
+npx npm-check --update-all
+npm i
+cd ..
