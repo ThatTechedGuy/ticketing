@@ -1,4 +1,4 @@
-import { signin } from "../../test/util";
+import { signin, generateId } from "../../test/util";
 import request from "supertest";
 import { app } from "../../app";
 import { Ticket } from "../../models/ticket";
@@ -9,6 +9,7 @@ const createTicket = async () => {
   const ticket = Ticket.build({
     price: 20,
     title: "New ticket",
+    id: generateId(),
   });
 
   await ticket.save();

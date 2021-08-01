@@ -6,6 +6,7 @@ import {
   NotAuthorizedError,
   requireAuth,
   validateRequest,
+  BadRequestError,
 } from "@ttgticketing/common";
 
 import { Ticket } from "../models/ticket";
@@ -34,6 +35,10 @@ router.put(
       throw new NotFoundError();
     }
 
+    if (ticket.orderId) {
+      throw new BadRequestError("Cannot edit a reserved ticket");
+    }
+
     if (userId !== ticket.userId) {
       throw new NotAuthorizedError();
     }
@@ -52,6 +57,7 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
 
     res.status(201).send(ticket);

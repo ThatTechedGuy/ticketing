@@ -1,6 +1,7 @@
 import { model, Schema, Document, Model } from "mongoose";
 import { OrderStatus } from "@ttgticketing/common";
 import { TicketDoc } from "./ticket";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 // Convinience purposes
 export { OrderStatus };
@@ -17,6 +18,7 @@ interface OrderDoc extends Document {
   status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
+  version: number;
 }
 
 interface OrderModel extends Model<OrderDoc> {
@@ -52,6 +54,10 @@ const orderSchema = new Schema<OrderDoc, OrderModel>(
     },
   }
 );
+
+orderSchema.set("versionKey", "version");
+// @ts-ignore
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attrs: OrderAttrs) => new Order(attrs);
 

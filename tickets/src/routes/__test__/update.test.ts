@@ -4,6 +4,7 @@ import { app } from "./../../app";
 import { generateId, signin } from "../../test/util";
 import { natsWrapper } from "../../nats-wrapper";
 import { Subjects } from "@ttgticketing/common";
+import { Ticket } from "../../models/ticket";
 
 it("returns a 404 if the provided id does not exist", async () => {
   const ticketId = generateId();
@@ -171,4 +172,35 @@ it("publishes an event", async () => {
     expect.anything(),
     expect.anything()
   );
+});
+
+it("rejects updates if the ticket is reserved", async () => {
+  const cookie = signin();
+
+  // Create ticket
+  const res = await request(app)
+    .post(`/api/tickets`)
+    .set("Cookie", cookie)
+    .send({
+      title: "title",
+      price: 200,
+    })
+    .expect(201);
+
+  const ticketId = res.body.id;
+
+  const ticket = await Ticket.findById(ticketId);
+
+  ticket!.set({ orderId: generateId() });
+  await ticket!.save();
+
+  // Update ticket
+  await request(app)
+    .put(`/api/tickets/${ticketId}`)
+    .set("Cookie", cookie)
+    .send({
+      title: "new title",
+      price: 300,
+    })
+    .expect(400);
 });

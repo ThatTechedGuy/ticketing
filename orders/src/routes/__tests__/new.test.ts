@@ -24,6 +24,7 @@ it("returns an error if the ticket is already reserved", async () => {
   const ticket = Ticket.build({
     title: "concert",
     price: 20,
+    id: generateId(),
   });
   await ticket.save();
   const order = Order.build({
@@ -46,6 +47,7 @@ it("reserves a ticket", async () => {
   const ticket = Ticket.build({
     title: "concert",
     price: 20,
+    id: generateId(),
   });
 
   await ticket.save();
@@ -63,6 +65,7 @@ it("reserves a ticket and emits an order created event", async () => {
   const ticket = Ticket.build({
     title: "concert",
     price: 20,
+    id: generateId(),
   });
 
   await ticket.save();
