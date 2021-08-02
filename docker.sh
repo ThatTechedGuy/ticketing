@@ -14,7 +14,12 @@ cd orders
 docker build -t orders .
 cd ..
 
-echo "Installing client dependencies.."
+echo "Dockerizing client.."
 cd client 
 docker build -t client .
+cd ..
+
+echo "Dockerizing expiration microservice.."
+cd expiration
+docker build -t expiration .
 cd ..

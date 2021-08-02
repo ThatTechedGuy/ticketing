@@ -1,15 +1,20 @@
 #!/bin/sh
-echo "Running tests on auth service.."
+echo "Testing auth microservice.."
 cd auth 
 npx jest
 cd ..
 
-echo "Upgrading tickets microservice.."
+echo "Testing tickets microservice.."
 cd tickets 
 npx jest
 cd ..
 
-echo "Upgrading orders microservice.."
+echo "Testing orders microservice.."
 cd orders 
+npx jest
+cd ..
+
+echo "Testing expiration microservice.."
+cd expiration 
 npx jest
 cd ..
