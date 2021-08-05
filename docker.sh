@@ -23,3 +23,8 @@ echo "Dockerizing expiration microservice.."
 cd expiration
 docker build -t expiration .
 cd ..
+
+echo "Dockerizing payments microservice.."
+cd payments
+docker build -t payments .
+cd ..

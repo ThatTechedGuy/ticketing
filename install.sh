@@ -45,3 +45,9 @@ cd expiration
 npx npm-check --update-all
 npm i 
 cd ..
+
+echo "Upgrading payments microservice..." 
+cd payments 
+npx npm-check --update-all
+npm i 
+cd ..

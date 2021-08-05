@@ -18,3 +18,8 @@ echo "Testing expiration microservice.."
 cd expiration 
 npx jest
 cd ..
+
+echo "Testing payments microservice.."
+cd payments 
+npx jest
+cd ..

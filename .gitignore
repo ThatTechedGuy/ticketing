@@ -4,3 +4,9 @@
 package-lock.json
 .idea
 */.next
+
+*.env
+*/*.env
+*/*.env.ts
+*/*env.ts
+env.ts
