@@ -1,6 +1,6 @@
 import React from "react";
 
-const Error = ({ errors }) => {
+const ErrorMessages = ({ errors }) => {
   if (!errors?.length) {
     return null;
   }
@@ -16,4 +16,4 @@ const Error = ({ errors }) => {
   );
 };
 
-export default Error;
+export default ErrorMessages;

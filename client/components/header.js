@@ -7,7 +7,11 @@ const signedOutLinks = [
   { label: "Sign up", href: Screens.SIGNUP },
 ];
 
-const signedInLinks = [{ label: "Sign out", href: Screens.SIGNOUT }];
+const signedInLinks = [
+  { label: "My Orders", href: Screens.ORDERS_ROOT },
+  { label: "Sell Tickets", href: Screens.NEW_TICKET },
+  { label: "Sign Out", href: Screens.SIGNOUT },
+];
 
 const renderLink = ({ label, href }) => (
   <NavLink label={label} href={href} key={href} />

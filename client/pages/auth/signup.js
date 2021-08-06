@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import AuthAPI from "../../api/auth";
+import { AuthAPI } from "../../api/apiImpl";
 import FormError from "../../components/error";
 import Router, { Screens } from "../../navigation/routerUtils";
 

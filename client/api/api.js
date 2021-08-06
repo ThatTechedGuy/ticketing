@@ -18,15 +18,17 @@ class Api {
   /**
    * Send a GET request to the API
    * @param {String} route
+   * @param {Object} ctx - next context
+   * @param {String} params
    */
-  static async get(route, ctx) {
+  static async get(route, ctx, params) {
     const instance = getInstance(ctx);
     let data = {},
       errors = null;
     console.log("GET " + route);
 
     try {
-      const res = await instance.get(route);
+      const res = await instance.get(route, params);
       data = res?.data;
     } catch (err) {
       errors = err?.response?.data?.errors;
@@ -37,9 +39,10 @@ class Api {
   /**
    * Send a POST request to the API
    * @param {String} route
+   * @param {Object} ctx - next context
    * @param {Object} params
    */
-  static async post(route, params, ctx) {
+  static async post(route, ctx, params) {
     const instance = getInstance(ctx);
     let data = {},
       errors = null;
@@ -55,5 +58,8 @@ class Api {
     return { data, errors };
   }
 }
+
+export const STRIPE_PUBLISHABLE_KEY =
+  "pk_test_51JKn9ASDFeGt7Nl5EO3dbt4KdVyPUa7GcumZTLctAUsNgUR5e3rZ2xjJKQtm9rvBtdjz4SLtuLUfyxpzIOt2k6O9008WDMZCIr";
 
 export default Api;
